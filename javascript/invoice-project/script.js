@@ -3,29 +3,21 @@
 // Elements
 // =========================
 
-const amountInput = document.getElementById("amount");
+const unitPrice = document.getElementById("amount");
 
-const productPrice =
-    document.getElementById("productPrice");
+const productPrice = document.getElementById("productPrice");
 
-const taxValue =
-    document.getElementById("taxValue");
+const taxValue = document.getElementById("taxValue");
 
-const totalValue =
-    document.getElementById("totalValue");
+const totalValue = document.getElementById("totalValue");
 
-const modal =
-    document.getElementById("modal");
+const modal = document.getElementById("modal");
 
-const confirmationMessage =
-    document.getElementById("confirmationMessage");
+const confirmationMessage = document.getElementById("confirmationMessage");
 
-const cancelBtn =
-    document.getElementById("cancelBtn");
+const cancelBtn = document.getElementById("cancelBtn");
 
-const confirmBtn =
-    document.getElementById("confirmBtn");
-
+const confirmBtn = document.getElementById("confirmBtn");
 
 // =========================
 // Data
@@ -37,131 +29,98 @@ const taxRate = 0.14;
 
 let newAmount;
 
-
 // =========================
 // Format Money
 // =========================
 
 function formatMoney(number) {
-
-    return `$${number.toFixed(2)}`;
-
+  return `$${number.toFixed(2)}`;
 }
-
 
 // =========================
 // Update Invoice
 // =========================
 
 function updateInvoice(amount) {
+  const tax = amount * taxRate;
 
-    const tax = amount * taxRate;
+  const total = amount + tax;
 
-    const total = amount + tax;
+  productPrice.textContent = formatMoney(amount);
 
+  taxValue.textContent = formatMoney(tax);
 
-    productPrice.textContent =
-        formatMoney(amount);
-
-    taxValue.textContent =
-        formatMoney(tax);
-
-    totalValue.textContent =
-        formatMoney(total);
-
+  totalValue.textContent = formatMoney(total);
 }
-
 
 // =========================
 // Input Change
 // =========================
 
-amountInput.addEventListener("change", function () {
+unitPrice.addEventListener("change", function () {
+  newAmount = Number(unitPrice.value);
 
-    newAmount = Number(amountInput.value);
+  // القيمة لم تتغير
 
+  if (newAmount === currentAmount) {
+    return;
+  }
 
-    // القيمة لم تتغير
+  // التحقق من القيمة
 
-    if (newAmount === currentAmount) {
+  if (newAmount <= 0) {
+    alert("Please enter a valid amount.");
 
-        return;
+    unitPrice.value = currentAmount;
 
-    }
+    return;
+  }
 
+  // إظهار رسالة التأكيد
 
-    // التحقق من القيمة
+  confirmationMessage.textContent = `Change ${formatMoney(currentAmount)} → ${formatMoney(newAmount)} ?`;
 
-    if (newAmount <= 0) {
-
-        alert("Please enter a valid amount.");
-
-        amountInput.value = currentAmount;
-
-        return;
-
-    }
-
-
-    // إظهار رسالة التأكيد
-
-    confirmationMessage.textContent =
-        `Change ${formatMoney(currentAmount)} → ${formatMoney(newAmount)} ?`;
-
-    modal.classList.add("active");
-
+  modal.classList.add("active");
 });
-
 
 // =========================
 // Confirm
 // =========================
 
 confirmBtn.addEventListener("click", function () {
+  // حفظ القيمة الجديدة
 
-    // حفظ القيمة الجديدة
+  currentAmount = newAmount;
 
-    currentAmount = newAmount;
+  // تحديث الـ input
 
+  unitPrice.value = currentAmount;
 
-    // تحديث الـ input
+  // تحديث الفاتورة
 
-    amountInput.value = currentAmount;
+  updateInvoice(currentAmount);
 
+  // إغلاق الـ Modal
 
-    // تحديث الفاتورة
-
-    updateInvoice(currentAmount);
-
-
-    // إغلاق الـ Modal
-
-    modal.classList.remove("active");
-
+  modal.classList.remove("active");
 });
-
 
 // =========================
 // Cancel
 // =========================
 
 cancelBtn.addEventListener("click", function () {
+  // إرجاع القيمة القديمة
 
-    // إرجاع القيمة القديمة
+  unitPrice.value = currentAmount;
 
-    amountInput.value = currentAmount;
+  // إغلاق الـ Modal
 
-
-    // إغلاق الـ Modal
-
-    modal.classList.remove("active");
-
+  modal.classList.remove("active");
 });
-
 
 // =========================
 // Initial Invoice
 // =========================
 
 updateInvoice(currentAmount);
-
