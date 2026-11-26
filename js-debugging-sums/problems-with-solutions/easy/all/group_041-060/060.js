@@ -1,0 +1,23 @@
+// JavaScript Debugging Challenge #060
+
+// ==================== PROBLEM ====================
+// Find and fix the bug in this code.
+
+for (let i = 1; i <= 3; i++) {
+  for (let j = 1; j <= 3; i++) {
+    console.log(i, j);
+  }
+}
+
+// ==================== SOLUTION ====================
+for (let i = 1; i <= 3; i++) {
+  for (let j = 1; j <= 3; j++) {
+    console.log(i, j);
+  }
+}
+
+// ==================== EXPLANATION ====================
+// // The inner loop must update j, not i. Otherwise j never changes and the inner loop never ends.
+
+// ==================== EXPECTED OUTPUT ====================
+// Nine pairs from (1,1) to (3,3)
